@@ -19,5 +19,9 @@
   "homepage": "https://github.com/ericaviana12/cadastro#readme",
   "devDependencies": {
     "electron": "^35.0.0"
+  },
+  "dependencies": {
+    "mongoose": "^8.12.1",
+    "string-similarity": "^4.0.4"
   }
 }

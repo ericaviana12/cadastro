@@ -1,0 +1,28 @@
+@charset "UTF-8";
+
+/** importação de fonts off-line **/
+@font-face {
+    font-family: "Fredoka";
+    src: url("../Fredoka/Fredoka-VariableFont_wdth\,wght.ttf");
+}
+
+body {
+    font-family: "Fredoka";
+}
+
+/** Rodapé **/
+footer {
+    width: 100%;
+    height: 45px;
+    padding: 5px;
+    background-color: #e15a1f;
+    display: flex;   
+    justify-content: space-between;    
+    position: fixed;
+    bottom: 0;
+}
+
+footer p {
+    color: #fff;
+    font-size: 1.25em;
+}

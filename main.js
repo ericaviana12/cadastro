@@ -31,22 +31,22 @@ const createWindow = () => {
 // Janela sobre
 let about
 function aboutWindow() {
-  nativeTheme.themeSource='light'
+  nativeTheme.themeSource = 'light'
   // Obter a janela principal
   const mainWindow = BrowserWindow.getFocusedWindow()
   // Validação (se existir a janela principal)
   if (mainWindow) {
     about = new BrowserWindow({
-    width: 450, // Largura
-    height: 300, // Altura
-    autoHideMenuBar: true, // Esconder o menu do browser
-    resizable: false, // Maximizar
-    minimizable: false, // Minimizar
-    parent: mainWindow, // Estabelecer uma relação hierárquica entre janelas
-    modal: true // Criar uma janela modal
-  })
+      width: 450, // Largura
+      height: 300, // Altura
+      autoHideMenuBar: true, // Esconder o menu do browser
+      resizable: false, // Maximizar
+      minimizable: false, // Minimizar
+      parent: mainWindow, // Estabelecer uma relação hierárquica entre janelas
+      modal: true // Criar uma janela modal
+    })
   }
-  
+
   about.loadFile('./src/views/sobre.html')
 }
 
@@ -110,6 +110,10 @@ const template = [
       },
       {
         type: 'separator'
+      },
+      {
+        label: 'Recarregar',
+        role: 'reload'
       },
       {
         label: 'DevTools',

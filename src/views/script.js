@@ -90,20 +90,20 @@ document.querySelector("form").addEventListener("submit", function (event) {
     }
 });
 
-document.getElementById('btnAdicionar').addEventListener('click', function () {
+//document.getElementById('btnAdicionar').addEventListener('click', function () {
     // Função para adicionar os dados
-    alert('Dados adicionados com sucesso!');
+//    alert('Dados adicionados com sucesso!');
     // Aqui você pode adicionar a lógica de cadastro no banco de dados ou na memória
-});
+//});
 
-document.getElementById('btnEditar').addEventListener('click', function () {
+//document.getElementById('btnEditar').addEventListener('click', function () {
     // Função para editar os dados
-    alert('Dados editados com sucesso!');
+//    alert('Dados editados com sucesso!');
     // Aqui você pode adicionar a lógica de edição no banco de dados ou na memória
-});
+//});
 
-document.getElementById('btnExcluir').addEventListener('click', function () {
+//document.getElementById('btnExcluir').addEventListener('click', function () {
     // Função para excluir os dados
-    alert('Dados excluídos com sucesso!');
+//    alert('Dados excluídos com sucesso!');
     // Aqui você pode adicionar a lógica de exclusão no banco de dados ou na memória
-});
+//});

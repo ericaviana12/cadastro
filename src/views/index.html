@@ -20,7 +20,8 @@
         <div class="mb-4">
             <label for="buscarCliente" class="form-label">Buscar cliente:</label>
             <div class="input-group">
-                <input type="text" id="buscarCliente" class="form-control" placeholder="Digite o nome ou CPF para buscar..." aria-label="Pesquisar Usuário">
+                <input type="text" id="buscarCliente" class="form-control"
+                    placeholder="Digite o nome ou CPF para buscar..." aria-label="Pesquisar Usuário">
                 <button class="btn btn-outline-primary" type="button" onclick="buscarCliente()">Buscar</button>
             </div>
         </div>
@@ -33,7 +34,7 @@
             <div class="mb-3 row"> <!-- Cria uma linha para o campo de nome -->
 
                 <div class="col-sm-8"> <!-- Cria uma divisão para o campo de entrada -->
-                    <label for="cnome" class="col-form-label">Nome:</label> <!-- Label para o campo Nome -->
+                    <label for="cnome" class="col-sm-2 col-form-label">Nome:</label> <!-- Label para o campo Nome -->
                     <input type="text" name="nome" id="cnome" class="form-control" size="30" maxlength="50" required
                         autofocus>
                     <!-- Campo de texto para o nome, obrigatório e com foco automático -->
@@ -150,9 +151,9 @@
         </fieldset>
 
         <div class="mt-4 text-center form-group"> <!-- Seção para os botões no final do formulário -->
-            <button type="button" id="btnAdicionar" class="btn btn-success">Adicionar</button> <!-- Botão Adicionar -->
-            <button type="button" id="btnEditar" class="btn btn-warning">Editar</button> <!-- Botão Editar -->
-            <button type="button" id="btnExcluir" class="btn btn-danger">Excluir</button> <!-- Botão Excluir -->
+            <button type="submit" id="btnAdicionar" class="btn btn-success">Adicionar</button> <!-- Botão Adicionar -->
+            <button type="submit" id="btnEditar" class="btn btn-warning">Editar</button> <!-- Botão Editar -->
+            <button type="submit" id="btnExcluir" class="btn btn-danger">Excluir</button> <!-- Botão Excluir -->
         </div>
 
     </form>

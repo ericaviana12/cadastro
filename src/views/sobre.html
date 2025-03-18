@@ -4,12 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sobre</title>
+    <style>
+        /* Estilos personalizados */
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+        .container {
+            margin-top: 20px;
+            max-width: 500px;
+            height: 700px;
+            overflow-y: auto; /* Permite rolagem caso o conteúdo exceda a altura */
+        }
+        h1 {
+            font-size: 1.8rem;
+        }
+        h2 {
+            font-size: 1.4rem;
+        }
+        h3, h4 {
+            font-size: 1.2rem;
+        }
+        p, ul {
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+    </style>
 </head>
 <body>
-    <h2>Cadastro</h2>
-    <h3>Aplicação para cadastro de clientes</h3>
-    <h4>Autor: Erica Viana</h4>
-    <h4>Sob a licença MIT</h4>
-    <p>Versão 1.0</p>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h1 class="display-4">Sobre a Aplicação</h1>
+                <p class="lead">Uma aplicação para cadastro de clientes de maneira rápida e eficiente.</p>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Detalhes do Projeto</h2>
+                <p><strong>Versão:</strong> 1.0</p>
+                <p><strong>Licença:</strong> MIT</p>
+                <p><strong>Autor:</strong> Erica Viana</p>
+                <p><strong>Descrição:</strong> Este sistema foi desenvolvido para ajudar no gerenciamento de dados de clientes. Ele oferece uma interface simples e fácil de usar para inserção e consulta de informações cadastrais.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Funcionalidades</h2>
+                <ul>
+                    <li>Cadastro de clientes com campos essenciais como nome, endereço e contato.</li>
+                    <li>Interface simples e intuitiva.</li>
+                    <li>Armazenamento local dos dados (offline).</li>
+                    <li>Facilidade de uso em dispositivos móveis e desktops.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

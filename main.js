@@ -6,7 +6,14 @@ console.log("Electron - Processo principal")
 // nativeTheme -> definir o tema claro, escuro ou padrão do sistema
 // Menu -> definir um menu personalizado
 // Shell -> Acessar links externos no navegador padrão
-const { app, BrowserWindow, nativeTheme, Menu, shell } = require('electron/main')
+// ipcMain -> Permite estabelecer uma comunicação entre processos (IPC) main.js <=> renderer.js
+const { app, BrowserWindow, nativeTheme, Menu, shell, ipcMain } = require('electron/main')
+
+// Ativação do preload.js (importação do path (caminho))
+const path = require('node:path')
+
+// Importação ds métodos conectar e desconectar (módulo de conexão)
+const { conectar, desconectar } = require('./database.js')
 
 // Janela principal
 let win
@@ -17,6 +24,11 @@ const createWindow = () => {
     width: 1010, // Largura
     height: 720, // Altura
     resizable: false, // Maximizar
+
+      // Linhas abaixo para ativação do preload. Importado através da linha de Importação ds métodos conectar e desconectar (módulo de conexão)
+  webPreferences: {
+    preload: path.join(__dirname, 'preload.js')
+  }
   })
 
   // Carregar o menu personalizado
@@ -24,8 +36,8 @@ const createWindow = () => {
   Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 
 
-  // Carregar o documento HTML na janela
-  win.loadFile('./src/views/index.html')
+// Carregar o documento HTML na janela
+win.loadFile('./src/views/index.html')
 }
 
 // Janela sobre
@@ -38,7 +50,7 @@ function aboutWindow() {
   if (mainWindow) {
     about = new BrowserWindow({
       width: 500, // Largura
-      height: 800, // Altura
+      height: 500, // Altura
       autoHideMenuBar: true, // Esconder o menu do browser
       resizable: false, // Maximizar
       minimizable: false, // Minimizar
@@ -54,6 +66,21 @@ function aboutWindow() {
 app.whenReady().then(() => {
   createWindow()
 
+  // Melhor local para estebelecer a conexão com o banco de dados
+  // No MongoDb é mais eficiente manter uma única conexão aberta durante todo o tempo de vida do aplicativo e fechar a conexão e encerrar quando o aplicativo for finalizado
+  // ipcMain.on (receber mensagem)
+  // db-connect (rótulo da mensagem)
+  ipcMain.on('db-connect', async (event) => {
+    // A linha abaixo estabelece a conexão com o banco de dados
+    await conectar()
+    // Enviar ao rendereizador uma mensagem para trocar a imagem do ícone do status do banco de dados (criar um delay de 0.5s ou 1s para sincronização com a nuvem)
+    setTimeout(() => {
+      // Enviar ao renderizador a mensagem "conectado"
+      // db-status (IPC - comunicação entre processos - autorizada pelo preload.js)
+      event.reply('db-status', "conectado")
+    }, 500) // 500ms = 0.5s
+  })
+
   // Só ativar a janela principal se nenhuma outra estiver ativa
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -67,6 +94,11 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
+})
+
+// IMPORTANTE! Desconectar do banco de dados quando a aplicação for finalizada
+app.on('before-quit', async () => {
+  await desconectar()
 })
 
 // Reduzir a verbosidade de logs não críticos (devtools)

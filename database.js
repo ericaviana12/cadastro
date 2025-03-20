@@ -25,10 +25,10 @@ const conectar = async () => {
             await mongoose.connect(url) // Conectar
             conectado = true // Setar a variável
             console.log("MongoDB Conectado")
-            return true // Verificação do main
+            return true // Verificação para o main
         } catch (error) {
             console.log(error)
-            return false // Verificação do main
+            return false // Verificação para o main
         }
     }
 }

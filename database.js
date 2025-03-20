@@ -42,8 +42,10 @@ const desconectar = async () => {
             await mongoose.disconnect(url) // Desconectar
             conectado = false // Setar a variável
             console.log("MongoDB Desconectado")
+            return true // Verificação para o main
         } catch (error) {
             console.log(error)
+            return false // Verificação para o main
         }
     }
 }

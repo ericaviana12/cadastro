@@ -12,8 +12,11 @@ const { app, BrowserWindow, nativeTheme, Menu, shell, ipcMain } = require('elect
 // Ativação do preload.js (importação do path (caminho))
 const path = require('node:path')
 
-// Importação ds métodos conectar e desconectar (módulo de conexão)
+// Importação dos métodos conectar e desconectar (módulo de conexão)
 const { conectar, desconectar } = require('./database.js')
+
+// Importação do modelo de dados (Notes.js)
+const noteModel = require('./src/models/Notes.js')
 
 // Janela principal
 let win
@@ -167,3 +170,34 @@ const template = [
     ]
   }
 ]
+
+// ============================================================
+// CRUD - Create ==============================================
+
+// Recebimento do objeto que contém os dados da nota
+ipcMain.on('create-cadastro', async (event, cadastroCliente) => {
+  // IMPORTANTE! Teste de recebimento do objeto - Passo 2
+  console.log(cadastroCliente)
+  // Criar uma nova estrutura de dados para salvar no banco
+  // ATENÇÃP! Os atributos da estrutura precisam ser idênticos ao modelo e os valores são obtidos através do objeto stickyNote
+  const newCadastro = noteModel({
+    nome: cadastroCliente.textNome,
+    cpf: cadastroCliente.textCpf,
+    email: cadastroCliente.textEmail,
+    fone: cadastroCliente.textFone,
+    cep: cadastroCliente.textCep,
+    logradouro: cadastroCliente.textLogradouro,
+    numero: cadastroCliente.textNumero,
+    complemento: cadastroCliente.textComplemento,
+    bairro: cadastroCliente.textBairro,
+    cidade: cadastroCliente.textCidade,
+    uf: cadastroCliente.textUf
+})
+  // Salvar a nota no banco de dados (Passo 3: fluxo)
+  newCadastro.save()
+
+})
+
+
+// == Fim - CRUD - Create =====================================
+// ============================================================

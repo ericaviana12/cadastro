@@ -27,7 +27,7 @@
         </div>
     </div>
 
-    <form> <!-- Início do formulário -->
+    <form id="frmCadastro"> <!-- Início do formulário -->
         <!-- Identificação do Usuário -->
         <fieldset class="border p-4 mt-4"> <!-- Cria um campo de identificação com borda e padding -->
 
@@ -36,7 +36,7 @@
                 <div class="col-sm-8"> <!-- Cria uma divisão para o campo de entrada -->
                     <label for="cnome" class="col-sm-2 col-form-label">Nome:</label> <!-- Label para o campo Nome -->
                     <input type="text" name="nome" id="cnome" class="form-control" size="30" maxlength="50" required
-                        autofocus>
+                        autofocus id="inputNome">
                     <!-- Campo de texto para o nome, obrigatório e com foco automático -->
                 </div>
 
@@ -44,7 +44,7 @@
 
                     <label for="cpf" class="col-form-label">CPF:</label> <!-- Label para o campo CPF -->
                     <input type="text" id="cpf" name="cpf" class="form-control" maxlength="14" required
-                        oninput="validarCPF(this)">
+                        oninput="validarCPF(this)" id="inputCpf">
                     <!-- Campo para CPF, com validação via JavaScript -->
                 </div>
 
@@ -55,7 +55,7 @@
                 <div class="col-sm-5">
                     <label for="cemail" class="col-form-label">E-mail:</label>
                     <!-- Label para o campo E-mail -->
-                    <input type="email" name="email" id="cemail" class="form-control" size="30" maxlength="50" required>
+                    <input type="email" name="email" id="cemail" class="form-control" size="30" maxlength="50" required id="inputEmail">
                     <!-- Campo para e-mail, obrigatório -->
                 </div>
 
@@ -63,13 +63,13 @@
                     <label for="cphone" class="col-form-label">Telefone:</label>
                     <!-- Label para o campo Telefone -->
                     <input type="tel" name="telefone" id="cphone" class="form-control" size="15" maxlength="15" required
-                        oninput="mascaraTelefone(this)">
+                        oninput="mascaraTelefone(this)" id="inputFone">
                     <!-- Campo para telefone, com máscara aplicada via JavaScript -->
                 </div>
 
                 <div class="col-sm-2">
                     <label for="cep" class="col-form-label">CEP:</label> <!-- Label para o campo CEP -->
-                    <input type="text" id="cep" class="form-control" maxlength="9" onblur="buscarEndereco()">
+                    <input type="text" id="cep" class="form-control" maxlength="9" onblur="buscarEndereco()" id="inputCep">
                     <!-- Campo para CEP, com função JavaScript para buscar o endereço ao perder o foco -->
                 </div>
 
@@ -80,19 +80,19 @@
                 <div class="col-sm-5">
                     <label for="logradouro" class="col-form-label">Logradouro:</label>
                     <!-- Label para o campo Logradouro -->
-                    <input type="text" id="logradouro" class="form-control"> <!-- Campo para Logradouro -->
+                    <input type="text" id="logradouro" class="form-control" id="inputLogradouro"> <!-- Campo para Logradouro -->
                 </div>
 
                 <div class="col-sm-4">
                     <label for="numero" class="col-form-label">Número:</label>
                     <!-- Label para o campo Número -->
-                    <input type="text" id="numero" class="form-control"> <!-- Campo para Número -->
+                    <input type="text" id="numero" class="form-control" id="inputNumero"> <!-- Campo para Número -->
                 </div>
 
                 <div class="col-sm-3">
                     <label for="complemento" class="col-form-label">Complemento:</label>
                     <!-- Label para o campo Complemento -->
-                    <input type="text" id="complemento" class="form-control"> <!-- Campo para Complemento -->
+                    <input type="text" id="complemento" class="form-control" id="inputComplemento"> <!-- Campo para Complemento -->
                 </div>
 
             </div>
@@ -102,18 +102,18 @@
                 <div class="col-sm-4">
                     <label for="bairro" class="col-form-label">Bairro:</label>
                     <!-- Label para o campo Bairro -->
-                    <input type="text" id="bairro" class="form-control"> <!-- Campo para Bairro -->
+                    <input type="text" id="bairro" class="form-control" id="inputBairro"> <!-- Campo para Bairro -->
                 </div>
 
                 <div class="col-sm-5">
                     <label for="cidade" class="col-form-label">Cidade:</label>
                     <!-- Label para o campo Cidade -->
-                    <input type="text" id="cidade" class="form-control"> <!-- Campo para Cidade -->
+                    <input type="text" id="cidade" class="form-control" id="inputCidade"> <!-- Campo para Cidade -->
                 </div>
 
                 <div class="col-sm-3">
                     <label for="uf" class="col-form-label">UF:</label> <!-- Label para o campo UF -->
-                    <select id="uf" name="uf" class="form-control" required>
+                    <select id="uf" name="uf" class="form-control" required id="inputUf">
                         <!-- Campo de seleção para UF, obrigatório -->
                         <option value="">Selecione...</option> <!-- Opção padrão para selecionar o estado -->
                         <!-- Lista de opções para os estados do Brasil -->

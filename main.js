@@ -7,7 +7,8 @@ console.log("Electron - Processo principal")
 // Menu -> definir um menu personalizado
 // Shell -> Acessar links externos no navegador padrão
 // ipcMain -> Permite estabelecer uma comunicação entre processos (IPC) main.js <=> renderer.js
-const { app, BrowserWindow, nativeTheme, Menu, shell, ipcMain } = require('electron/main')
+// dialog -> Módulo electron para ativar caixa de mensagens
+const { app, BrowserWindow, nativeTheme, Menu, shell, ipcMain, dialog } = require('electron/main')
 
 // Ativação do preload.js (importação do path (caminho))
 const path = require('node:path')
@@ -16,7 +17,7 @@ const path = require('node:path')
 const { conectar, desconectar } = require('./database.js')
 
 // Importação do modelo de dados (Notes.js)
-const noteModel = require('./src/models/Notes.js')
+const clientesModel = require('./src/models/Clientes.js')
 
 // Janela principal
 let win
@@ -178,9 +179,11 @@ const template = [
 ipcMain.on('create-cadastro', async (event, cadastroCliente) => {
   // IMPORTANTE! Teste de recebimento do objeto - Passo 2
   console.log(cadastroCliente)
+  // Cadastrar a estrutura de dados no banco de dados do MongoDB
+  try {
   // Criar uma nova estrutura de dados para salvar no banco
-  // ATENÇÃP! Os atributos da estrutura precisam ser idênticos ao modelo e os valores são obtidos através do objeto stickyNote
-  const newCadastro = noteModel({
+  // ATENÇÃO! Os atributos da estrutura precisam ser idênticos ao modelo e os valores são obtidos através do objeto stickyNote
+  const newCadastro = clientesModel({
     nome: cadastroCliente.textNome,
     cpf: cadastroCliente.textCpf,
     email: cadastroCliente.textEmail,
@@ -196,8 +199,24 @@ ipcMain.on('create-cadastro', async (event, cadastroCliente) => {
   // Salvar a nota no banco de dados (Passo 3: fluxo)
   newCadastro.save()
 
+    // Confirmação de cliente adicionado ao banco (uso do dialog) -> Essa linha de código deve ser inserida imediatamente após newClientes.save()
+    dialog.showMessageBox({
+      // Montagem da caixa de mensagem
+      type: 'info',
+      title: "Aviso",
+      message: "Cliente adicionado com sucesso",
+      buttons: ['OK']
+    }).then((result) => {
+      // Se o botão OK for pressionado
+      if (result.response === 0) {
+        // Enviar um pedido para o renderizador limpar os campos (preload.js)
+        event.reply('reset-form')
+      }
+    })
+  } catch (error) {
+    console.log(error)
+  }
 })
-
 
 // == Fim - CRUD - Create =====================================
 // ============================================================

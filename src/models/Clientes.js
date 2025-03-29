@@ -7,7 +7,7 @@
 const { model, Schema, version } = require('mongoose')
 
 // Criação da estrutura da coleção
-const cadastroSchema = new Schema({
+const clienteSchema = new Schema({
     nome: {
         type: String
     },
@@ -46,4 +46,4 @@ const cadastroSchema = new Schema({
 }, { versionKey: false })
 
 // Exportar o modelo de dados para o main
-module.exports = model('Clientes', cadastroSchema)
+module.exports = model('Clientes', clienteSchema)

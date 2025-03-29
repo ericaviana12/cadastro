@@ -33,63 +33,47 @@ api.dbStatus((event, message) => {
 // ============================================================
 
 // Capturar o foco da caixa de texto
-const foco = document.getElementById('inputNome')
+const foco = document.getElementById('buscarCliente')
 
 // Alterar as propriedades do documento HTML ao iniciar a aplicação
 document.addEventListener('DOMContentLoaded', () => {
+    // Desativar botões
+    btnEditar.disabled = true
+    btnExcluir.disabled = true
     foco.focus() // Iniciar o documento com foco na caixa de texto
 })
 
 // Capturar os dados do formulário (Passo 1: fluxo)
-let frmCadastro = document.getElementById('frmCadastro')
-let nome = document.getElementById('inputNome')
-let cpf = document.getElementById('inputCpf')
-let email = document.getElementById('inputEmail')
-let fone = document.getElementById('inputFone')
-let cep = document.getElementById('inputCep')
-let logradouro = document.getElementById('inputLogradouro')
-let numero = document.getElementById('inputNumero')
-let complemento = document.getElementById('inputComplemento')
-let bairro = document.getElementById('inputBairro')
-let cidade = document.getElementById('inputCidade')
-let uf = document.getElementById('inputUf')
-
-// ============================================================
-// CRUD - Create ==============================================
+let frmCliente = document.getElementById('frmCliente')
+let cnome = document.getElementById('cnome')
+let cpf = document.getElementById('cpf')
+let cemail = document.getElementById('cemail')
+let cphone = document.getElementById('cphone')
+let cep = document.getElementById('cep')
+let logradouro = document.getElementById('logradouro')
+let numero = document.getElementById('numero')
+let complemento = document.getElementById('complemento')
+let bairro = document.getElementById('bairro')
+let cidade = document.getElementById('cidade')
+let uf = document.getElementById('uf')
 
 // Evento relacionado ao botão submit
-frmCadastro.addEventListener('submit', (event) => {
-    // Evitar o comportamento padrão (recarregar a página)
+frmCliente.addEventListener('submit', (event) => {
+    // Evitar o comportamento padrão (recarregar a página) 
     event.preventDefault()
-    // IMPORTANTE! Teste de recebimento dos dados do form - Passo 1
-    console.log(`Nome: ${nome.value} - 
-                 CPF: ${cpf.value} - 
-                 E-mail: ${email.value} - 
-                 Telefone: ${fone.value} - 
-                 CEP: ${cep.value} - 
-                 Logradouro: ${logradouro.value} - 
-                 Número: ${numero.value} - 
-                 Complemento: ${complemento.value} - 
-                 Bairro: ${bairro.value} - 
-                 Cidade: ${cidade.value} - 
-                 UF: ${uf.value} - `)
-    // Criar um objeto para enviar ao main os dados da nota
-    const cadastroCliente = {
-        textNote: nome.value,
-        textNote: cpf.value,
-        textNote: email.value,
-        textNote: fone.value,
-        textNote: cep.value,
-        textNote: logradouro.value,
-        textNote: numero.value,
-        textNote: complemento.value,
-        textNote: bairro.value,
-        textNote: cidade.value,
-        textNote: uf.value,
-    }
-    // Enviar o objeto para o main (Passo 2: fluxo)
-    api.createCadastro(cadastroCliente)
+
+// ============================================================
+// == Resetar o formulário ====================================
+
+function resetForm() {
+    // Recarregar a página
+    location.reload()
+}
+
+// Uso da API reserForm quando salvar, editar ou excluir um cliente
+api.resetForm((args) => {
+    resetForm()
 })
 
-// == Fim - CRUD - Create =====================================
+// == Fim - Resetar o formulário ==============================
 // ============================================================

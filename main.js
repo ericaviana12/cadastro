@@ -1,5 +1,3 @@
-console.log("Electron - Processo principal")
-
 // Importação dos recursos do framework
 // app -> aplicação
 // BrowserWindow -> criação da janela
@@ -15,6 +13,7 @@ const path = require('node:path')
 
 // Importação dos métodos conectar e desconectar (módulo de conexão)
 const { conectar, desconectar } = require('./database.js')
+const { on } = require('node:events')
 
 // Importação do modelo de dados (Notes.js)
 const clientesModel = require('./src/models/Clientes.js')
@@ -29,10 +28,10 @@ const createWindow = () => {
     height: 720, // Altura
     resizable: false, // Maximizar
 
-      // Linhas abaixo para ativação do preload. Importado através da linha de Importação ds métodos conectar e desconectar (módulo de conexão)
-  webPreferences: {
-    preload: path.join(__dirname, 'preload.js')
-  }
+    // Linhas abaixo para ativação do preload. Importado através da linha de Importação ds métodos conectar e desconectar (módulo de conexão)
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js')
+    }
   })
 
   // Carregar o menu personalizado
@@ -40,8 +39,8 @@ const createWindow = () => {
   Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 
 
-// Carregar o documento HTML na janela
-win.loadFile('./src/views/index.html')
+  // Carregar o documento HTML na janela
+  win.loadFile('./src/views/index.html')
 }
 
 // Janela sobre
@@ -172,51 +171,54 @@ const template = [
   }
 ]
 
-// ============================================================
-// CRUD - Create ==============================================
+//===========================================================================
+//= CRUD Create==============================================================
 
-// Recebimento do objeto que contém os dados da nota
-ipcMain.on('create-cadastro', async (event, cadastroCliente) => {
-  // IMPORTANTE! Teste de recebimento do objeto - Passo 2
-  console.log(cadastroCliente)
-  // Cadastrar a estrutura de dados no banco de dados do MongoDB
+// Recebimento do objeto que contem os dados da nota
+ipcMain.on('create-clientes', async (event, cadastroClientes) => {
+  //IMPORTANTE! Teste do reecebimento do objeto (Passo 2)
+  console.log(cadastroClientes)
+  //Criar uma nova estrutura de dados para salvar no banco
+  //Atençaõ!! os atributos da estrutura precisam se idênticos ao modelo e os valores são obtidos através do objeto
+
   try {
-  // Criar uma nova estrutura de dados para salvar no banco
-  // ATENÇÃO! Os atributos da estrutura precisam ser idênticos ao modelo e os valores são obtidos através do objeto stickyNote
-  const newCadastro = clientesModel({
-    nome: cadastroCliente.textNome,
-    cpf: cadastroCliente.textCpf,
-    email: cadastroCliente.textEmail,
-    fone: cadastroCliente.textFone,
-    cep: cadastroCliente.textCep,
-    logradouro: cadastroCliente.textLogradouro,
-    numero: cadastroCliente.textNumero,
-    complemento: cadastroCliente.textComplemento,
-    bairro: cadastroCliente.textBairro,
-    cidade: cadastroCliente.textCidade,
-    uf: cadastroCliente.textUf
-})
-  // Salvar a nota no banco de dados (Passo 3: fluxo)
-  newCadastro.save()
+    const newClientes = clientesModel({
+      nome: cadastroClientes.nome,
+      cpf: cadastroClientes.cpf,
+      email: cadastroClientes.email,
+      telefone: cadastroClientes.telefone,
+      cep: cadastroClientes.cep,
+      logradouro: cadastroClientes.logradouro,
+      numero: cadastroClientes.numero,
+      complemento: cadastroClientes.complemento,
+      bairro: cadastroClientes.bairro,
+      cidade: cadastroClientes.cidade,
+      uf: cadastroClientes.uf
 
-    // Confirmação de cliente adicionado ao banco (uso do dialog) -> Essa linha de código deve ser inserida imediatamente após newClientes.save()
-    dialog.showMessageBox({
-      // Montagem da caixa de mensagem
+    })
+    //Salvar a nota no banco de dados (Passo 3:fluxo)
+    await newClientes.save()
+
+
+    //confirmação de cliente adicionado ao banco (uso do dialog)
+      dialog.showMessageBox({
       type: 'info',
       title: "Aviso",
       message: "Cliente adicionado com sucesso",
       buttons: ['OK']
     }).then((result) => {
-      // Se o botão OK for pressionado
-      if (result.response === 0) {
-        // Enviar um pedido para o renderizador limpar os campos (preload.js)
+      // se o botão OK for pressionando
+      if(result.response === 0) {
+        //enviar um pedido para o renderizador limpar os campos (preload.js)
         event.reply('reset-form')
       }
     })
+
   } catch (error) {
     console.log(error)
   }
 })
 
-// == Fim - CRUD - Create =====================================
-// ============================================================
+
+//== Fim - CRUD Create ======================================================
+//===========================================================================

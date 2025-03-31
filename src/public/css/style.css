@@ -29,7 +29,7 @@ footer p {
 
 /* BOTÃO ::-webkit-search-results-decoration */
 
-#btnLimpar {
+#btnReset {
     width: 48px;
     height: 48px;
     background-image: url('../img/vassoura.png');

@@ -2,7 +2,7 @@
  * Processo de renderização do documento index.html
  */
 
-console.log("Processo de renderização")
+console.log("Processo de Renderização")
 
 // inserção da data no rodapé
 function obterData() {
@@ -33,22 +33,23 @@ api.dbStatus((event, message) => {
 // ============================================================
 
 // Capturar o foco da caixa de texto
-const foco = document.getElementById('buscarCliente')
+const foco = document.getElementById('buscarCli')
 
 // Alterar as propriedades do documento HTML ao iniciar a aplicação
 document.addEventListener('DOMContentLoaded', () => {
-    // Desativar botões
-    btnEditar.disabled = true
-    btnExcluir.disabled = true
-    foco.focus() // Iniciar o documento com foco na caixa de texto
+    //Desativar os botões
+    btnUpdate.disabled = true
+    btnDelete.disabled = true
+    //Iniciar o documento com foco na caixa de texto
+    foco.focus() 
 })
 
 // Capturar os dados do formulário (Passo 1: fluxo)
-let frmCliente = document.getElementById('frmCliente')
-let cnome = document.getElementById('cnome')
-let cpf = document.getElementById('cpf')
-let cemail = document.getElementById('cemail')
-let cphone = document.getElementById('cphone')
+let frmCli = document.getElementById('frmCli')
+let nomeCliente = document.getElementById('nomeCliente')
+let cpfCliente = document.getElementById('cpfCliente')
+let emailCliente = document.getElementById('emailCliente')
+let telefoneCliente = document.getElementById('telefoneCliente')
 let cep = document.getElementById('cep')
 let logradouro = document.getElementById('logradouro')
 let numero = document.getElementById('numero')
@@ -57,10 +58,43 @@ let bairro = document.getElementById('bairro')
 let cidade = document.getElementById('cidade')
 let uf = document.getElementById('uf')
 
+
+//===========================================================================
+//= CRUD Create==============================================================
+
 // Evento relacionado ao botão submit
-frmCliente.addEventListener('submit', (event) => {
+frmCli.addEventListener('submit', (event) => {
     // Evitar o comportamento padrão (recarregar a página) 
     event.preventDefault()
+
+    console.log(
+        nomeCliente.value, cpfCliente.value, emailCliente.value, telefoneCliente.value, 
+        cep.value, logradouro.value, numero.value, complemento.value, bairro.value, cidade.value, uf.value
+    )
+
+    const cadastroClientes = {
+        nome: nomeCliente.value,
+        cpf: cpfCliente.value,
+        email: emailCliente.value,
+        telefone: telefoneCliente.value,
+        cep: cep.value,
+        logradouro: logradouro.value,
+        numero: numero.value,
+        complemento: complemento.value,
+        bairro: bairro.value,
+        cidade: cidade.value,
+        uf: uf.value
+
+    }
+
+    console.log("Enviando para o banco: ", cadastroClientes) // Teste
+    //Enviar o objeto para o main (Passo 2: fluxo)
+    api.createClientes(cadastroClientes)
+})
+
+//== Fim - CRUD Create ======================================================
+//===========================================================================
+
 
 // ============================================================
 // == Resetar o formulário ====================================

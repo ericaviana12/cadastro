@@ -14,6 +14,8 @@ const clientesSchema = new Schema({
     },
     cpf: {
         type: String,
+        unique: true,
+        index: true
     },
     email: {
         type: String

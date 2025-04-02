@@ -222,10 +222,10 @@ ipcMain.on('create-clientes', async (event, cadastroClientes) => {
         title: "ATENÇÃO!",
         message: "CPF já cadastrado. \n Verfique o número digitado.",
         buttons: ['OK']
-      }) .then((result) => {
+      }).then((result) => {
         // Se o botão OK for pressionado
         if (result.response === 0) {
-          // ...
+          event.reply('reset-cpf')
         }
       })
     } else {

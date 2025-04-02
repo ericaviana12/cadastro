@@ -18,3 +18,13 @@ contextBridge.exposeInMainWorld('api', {
     createClientes: (cadastroClientes) => ipcRenderer.send('create-clientes', cadastroClientes), // Envia para o main um objeto - manda a estrutura de dados para ser gravada no banco de dados
     resetForm: (args) => ipcRenderer.on('reset-form', args), // Quando quer enviar um argumento vazio, utiliza o "args" na função selecionada, como nessa linha de código
 })
+
+
+contextBridge.exposeInMainWorld('electron', {
+    sendMessage: (channel, data) => {
+      ipcRenderer.send(channel, data)
+    },
+    onReceiveMessage: (channel, callback) => {
+      ipcRenderer.on(channel, callback)
+    }
+  })

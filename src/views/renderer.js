@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btnUpdate.disabled = true
     btnDelete.disabled = true
     //Iniciar o documento com foco na caixa de texto
-    foco.focus() 
+    foco.focus()
 })
 
 // Capturar os dados do formulário (Passo 1: fluxo)
@@ -68,7 +68,7 @@ frmCli.addEventListener('submit', (event) => {
     event.preventDefault()
 
     console.log(
-        nomeCliente.value, cpfCliente.value, emailCliente.value, telefoneCliente.value, 
+        nomeCliente.value, cpfCliente.value, emailCliente.value, telefoneCliente.value,
         cep.value, logradouro.value, numero.value, complemento.value, bairro.value, cidade.value, uf.value
     )
 
@@ -110,4 +110,18 @@ api.resetForm((args) => {
 })
 
 // == Fim - Resetar o formulário ==============================
+// ============================================================
+
+
+// ============================================================
+// == Tratamento de exceção CPF duplicado =====================
+
+// Enviar a mensagem de reset-cpf para o main.js
+window.electron.onReceiveMessage('reset-cpf', () => {
+    cpfCliente.value = ""        // Limpar o campo CPF
+    cpfCliente.focus()           // Focar no campo CPF
+    cpfCliente.style.border = '2px solid red' // Adicionar borda vermelha ao campo CPF
+})
+
+// == Tratamento de exceção CPF duplicado =====================
 // ============================================================

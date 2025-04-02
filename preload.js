@@ -19,12 +19,12 @@ contextBridge.exposeInMainWorld('api', {
     resetForm: (args) => ipcRenderer.on('reset-form', args), // Quando quer enviar um argumento vazio, utiliza o "args" na função selecionada, como nessa linha de código
 })
 
-
+// Tratamento de exceção CPF duplicado
 contextBridge.exposeInMainWorld('electron', {
-    sendMessage: (channel, data) => {
-      ipcRenderer.send(channel, data)
-    },
-    onReceiveMessage: (channel, callback) => {
-      ipcRenderer.on(channel, callback)
-    }
-  })
+  sendMessage: (channel, data) => {
+    ipcRenderer.send(channel, data)
+  },
+  onReceiveMessage: (channel, callback) => {
+    ipcRenderer.on(channel, callback)
+  }
+})

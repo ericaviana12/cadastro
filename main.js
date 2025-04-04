@@ -3,7 +3,7 @@
 // BrowserWindow -> criação da janela
 // nativeTheme -> definir o tema claro, escuro ou padrão do sistema
 // Menu -> definir um menu personalizado
-// Shell -> Acessar links externos no navegador padrão
+// Shell -> Acessar links e aplicações externos no navegador padrão
 // ipcMain -> Permite estabelecer uma comunicação entre processos (IPC) main.js <=> renderer.js
 // dialog -> Módulo electron para ativar caixa de mensagens
 const { app, BrowserWindow, nativeTheme, Menu, shell, ipcMain, dialog } = require('electron/main')
@@ -17,6 +17,12 @@ const { on } = require('node:events')
 
 // Importação do modelo de dados (Notes.js)
 const clientesModel = require('./src/models/Clientes.js')
+
+// Importação da biblioteca nativa do JS para manipular arquivos
+const fs = require('fs')
+
+// Importação do pacote jspdf (arquivos PDF) npm install jspdf
+const { jspdf, default: jsPDF } = require('jspdf')
 
 // Janela principal
 let win
@@ -121,10 +127,11 @@ const template = [
     ]
   },
   {
-    label: 'Relatório',
+    label: 'Relatórios',
     submenu: [
       {
         label: 'Clientes',
+        click: () => relatorioClientes()
       }
     ]
   },
@@ -172,7 +179,7 @@ const template = [
 ]
 
 //===========================================================================
-//= CRUD Create==============================================================
+//= CRUD Create =============================================================
 
 // Recebimento do objeto que contem os dados da nota
 ipcMain.on('create-clientes', async (event, cadastroClientes) => {
@@ -237,4 +244,103 @@ ipcMain.on('create-clientes', async (event, cadastroClientes) => {
 
 
 //== Fim - CRUD Create ======================================================
+//===========================================================================
+
+
+//===========================================================================
+//= Relatório de clientes ===================================================
+
+async function relatorioClientes() {
+  try {
+    //================================================
+    //         Configuração do documento PDF
+    //================================================
+    // p -> portrait (em pé) / l -> landscape (deitado)
+    // mm -> milímetro / a4 -> tamanho da folha - 210 milímetros de largura e 297 milímetros de altura
+    const doc = new jsPDF('p', 'mm', 'a4')
+
+    // Inserir data atual no documento
+    const dataAtual = new Date().toLocaleDateString('pt-BR')
+    // doc.setFontSize() escolhe o tamanho da fonte em pontos (pt), onde 1 ponto equivale a aproximadamente 0,35 mm (igual no Word) 
+    doc.setFontSize(10)
+    // doc.text() escreve um texto no documento
+    doc.text(`Data: ${dataAtual}`, 150, 10) // (x, y (mm)) - 150 mm para direita e 50 mm para baixo
+
+    // Inserir título no documento
+    doc.setFontSize(18)
+    doc.text("Relatório de clientes", 15, 30)
+
+    //================================================
+    // Cabeçalho do documento
+    //================================================
+    doc.setFontSize(12)
+    let y = 50 // Variável de apoio
+    doc.text("Nome", 14, y)
+    doc.text("Telefone", 85, y)
+    doc.text("E-mail", 130, y)
+    y += 5 // += atribui valor ao "y"
+
+    // Desenhar uma linha
+    doc.setLineWidth(0.5)
+    doc.line(10, y, 200, y) // (10 (início) __________ 200 (fim))
+    y += 10
+
+    //================================================
+    // Obter a listagem de clientes (ordem alfabética)
+    //================================================
+
+    const clientes = await clientesModel.find().sort({ nome: 1 })
+    // Teste de recebimento (IMPORTANTE!)
+    // console.log(clientes)
+    // Popular o documento PDF com os clientes cadastrados
+    clientes.forEach((c) => {
+      // Criar uma nova página se y > 280mm (A4 = 297 mm)
+      if (y > 280) {
+        doc.addPage()
+        y = 20 // Margem de 20mm para iniciar a nova folha
+
+        // Cabeçalho do documento
+        doc.text("Nome", 14, y)
+        doc.text("Telefone", 85, y)
+        doc.text("E-mail", 130, y)
+        y += 5 // += atribui valor ao "y"
+
+        // Desenhar uma linha
+        doc.setLineWidth(0.5)
+        doc.line(10, y, 200, y) // (10 (início) __________ 200 (fim))
+        y += 10
+      }
+      doc.text(c.nome, 14, y)
+      doc.text(c.telefone, 85, y)
+      doc.text(c.email, 130, y)
+      y += 15
+    })
+
+    //================================================
+    //       Numeração automática de páginas
+    //================================================
+
+    const pages = doc.internal.getNumberOfPages()
+    for (let i = 1; i<=pages; i++) {
+      doc.setPage(i)
+      doc.setFontSize(10)
+      doc.text(`Página: ${i} de ${pages}`, 105,290, {align: 'center'}) // A VER O ALIGN: 'CENTER'
+    }
+
+    //================================================
+    //  Abrir o arquivo PDF no sistema operacional
+    //================================================
+    // Definir o caminho do arquivo temporário e nome do arquivo com extensão .pdf (IMPORTANTE!)
+    const tempDir = app.getPath('temp')
+    const filePath = path.join(tempDir, 'clientes.pdf')
+    // Salvar temporariamente o arquivo
+    doc.save(filePath)
+    // Abrir o arquivo no aplicativo padrão de leitura de pdf do computador do usuário
+    shell.openPath(filePath)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+//= Fim - Relatório de clientes =============================================
 //===========================================================================

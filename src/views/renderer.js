@@ -33,8 +33,12 @@ api.dbStatus((event, message) => {
 // ============================================================
 
 // Capturar o foco da caixa de texto
-const foco = document.getElementById('buscarCli')
+const foco = document.getElementById('buscarCliente')
 
+// Criar um vetor global para extrair os dados do cliente
+let arrayClient = []
+
+// Iniciar a janela de clientes alterando as propriedades de alguns elementos
 // Alterar as propriedades do documento HTML ao iniciar a aplicação
 document.addEventListener('DOMContentLoaded', () => {
     //Desativar os botões
@@ -96,8 +100,8 @@ frmCli.addEventListener('submit', (event) => {
 //===========================================================================
 
 
-// ============================================================
-// == Resetar o formulário ====================================
+// ==========================================================================
+// == Resetar o formulário ==================================================
 
 function resetForm() {
     // Recarregar a página
@@ -109,12 +113,12 @@ api.resetForm((args) => {
     resetForm()
 })
 
-// == Fim - Resetar o formulário ==============================
-// ============================================================
+// == Fim - Resetar o formulário ============================================
+// ==========================================================================
 
 
-// ============================================================
-// == Tratamento de exceção CPF duplicado =====================
+// ==========================================================================
+// == Tratamento de exceção CPF duplicado ===================================
 
 // Enviar a mensagem de reset-cpf para o main.js
 window.electron.onReceiveMessage('reset-cpf', () => {
@@ -123,5 +127,44 @@ window.electron.onReceiveMessage('reset-cpf', () => {
     cpfCliente.style.border = '2px solid red' // Adicionar borda vermelha ao campo CPF
 })
 
-// == Tratamento de exceção CPF duplicado =====================
-// ============================================================
+// == Tratamento de exceção CPF duplicado ===================================
+// ==========================================================================
+
+
+//===========================================================================
+//= CRUD Read ===============================================================
+
+function buscarNome() { // Nome da função é o nome do onclick no buscarCliente
+    console.log("Teste do botão buscar")
+    // Capturar o nome a ser pesquisado -> Passo 1
+    let cliName = document.getElementById('buscarCliente').value
+    // console.log(cliName) // Teste do passo 1
+    // Enviar o nome do cliente ao main -> Passo 2 (sair da aplicação e aparecer o nome no terminal)
+    api.searchName(cliName)
+    // Receber os dados do cliente -> Passo 5
+    api.renderClient((event, client) => {
+        // Teste de recebimento dos dados do cliente -> Passo 5
+        console.log(client)
+        // Passo 6 - renderização dos dados do cliente (preencher os inputs do form) | Não esquecer de converter os dados de string para JSON
+        const clientData = JSON.parse(client)
+        arrayClient = clientData
+        // Uso do forEach para percorrer o vetor e extrair os dados
+        arrayClient.forEach((c) => {
+            nomeCliente.value = c.nome
+            cpfCliente.value = c.cpf
+            emailCliente.value = c.email
+            telefoneCliente.value = c.telefone
+            cep.value = c.cep
+            logradouro.value = c.logradouro
+            numero.value = c.numero
+            complemento.value = c.complemento
+            bairro.value = c.bairro
+            cidade.value = c.cidade
+            uf.value = c.uf
+        })
+    })
+}
+
+//== Fim - CRUD Read ========================================================
+//===========================================================================
+

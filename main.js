@@ -321,10 +321,10 @@ async function relatorioClientes() {
     //================================================
 
     const pages = doc.internal.getNumberOfPages()
-    for (let i = 1; i<=pages; i++) {
+    for (let i = 1; i <= pages; i++) {
       doc.setPage(i)
       doc.setFontSize(10)
-      doc.text(`Página: ${i} de ${pages}`, 105,290, {align: 'center'}) // A VER O ALIGN: 'CENTER'
+      doc.text(`Página: ${i} de ${pages}`, 105, 290, { align: 'center' }) // A VER O ALIGN: 'CENTER'
     }
 
     //================================================
@@ -348,6 +348,17 @@ async function relatorioClientes() {
 //===========================================================================
 //= CRUD Read ===============================================================
 
+// Validação da busca
+
+ipcMain.on('validate-search', () => {
+  dialog.showMessageBox({
+    type: 'warning',
+    title: 'Atenção',
+    message: 'Preencha o campo de busca',
+    buttons: ['OK']
+  })
+})
+
 ipcMain.on('search-name', async (event, cliName) => {
   // Teste de recebimento do nome do cliente -> Passo 2
   console.log(cliName)
@@ -358,8 +369,31 @@ ipcMain.on('search-name', async (event, cliName) => {
     })
     // Teste da busca do cliente pelo nome -> Passo 3 e Passo 4
     console.log(client)
-    // Enviar ao renderizador (rendererCliente) os dados do cliente | Obs.: Não esquecer de converter para string -> JSON.stringify()
-    event.reply('render-client', JSON.stringify(client))
+    // Melhoria da experiência do usuário (se não existir um cliente cadastrado, enviar uma mensagem ao usuário questionando se ele deseja cadastrar este novo cliente)
+    // Se o vetor estiver vazio (lenght retorna o tamanho do vetor)
+    if (client.length === 0) {
+      // Questionar o usuário ...
+      dialog.showMessageBox({
+        type: 'warning',
+        title: 'Aviso',
+        message: 'Cliente não cadastrado. \nDeseja cadastrar este cliente?',
+        defaultId: 0,
+        buttons: ['Sim', 'Não'] // [0, 1] defaultId: 0 = Sim
+      }).then((result) => {
+        // Se o botão sim for pressionado
+        if (result.response === 0) {
+          // Enviar ao renderer.js um pedido para recortar e copiar o nome do cliente do campo de busca para o campo nome (evitar que o usuário digite o nome novamente)
+          event.reply('set-name')
+        } else {
+          // Enviar ao renderer.js um pedido para limpar os campos (reutilizar a API do preload.js 'reset-form)
+          event.reply('reset-form')
+        }
+      })
+    } else {
+      // Enviar ao renderizador (rendererCliente) os dados do cliente | Obs.: Não esquecer de converter para string -> JSON.stringify()
+      event.reply('render-client', JSON.stringify(client))
+    }
+
   } catch (error) {
     console.log(error)
   }

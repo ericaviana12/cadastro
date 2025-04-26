@@ -41,9 +41,11 @@ let arrayClient = []
 // Iniciar a janela de clientes alterando as propriedades de alguns elementos
 // Alterar as propriedades do documento HTML ao iniciar a aplicação
 document.addEventListener('DOMContentLoaded', () => {
-    //Desativar os botões
+    //Desativar os botões "atualizar" e "excluir"
     btnUpdate.disabled = true
     btnDelete.disabled = true
+    // Ativar o botão "adicionar"
+    btnCreate.disabled = false
     //Iniciar o documento com foco na caixa de texto
     foco.focus()
 })
@@ -61,6 +63,29 @@ let complemento = document.getElementById('complemento')
 let bairro = document.getElementById('bairro')
 let cidade = document.getElementById('cidade')
 let uf = document.getElementById('uf')
+
+
+// ============================================================
+// == Manipulação do Enter ====================================
+
+function teclaEnter(event) {
+    if (event.key === "Enter") {
+        event.preventDefault() // ignorar o comportamento padrão
+        // executar o método de busca do cliente
+        buscarNome()
+    }
+}
+
+// "Escuta" do teclado ('keydown' = pressionar tecla)
+frmCli.addEventListener('keydown', teclaEnter)
+
+// função para restaurar o padrão (tecla Enter)
+function restaurarEnter() {
+    frmCli.removeEventListener('keydown', teclaEnter)
+}
+
+// == Fim - Manipulação do Enter ==============================
+// ============================================================
 
 
 //===========================================================================
@@ -181,6 +206,13 @@ function buscarNome() { // Nome da função é o nome do onclick no buscarClient
                 bairro.value = c.bairro
                 cidade.value = c.cidade
                 uf.value = c.uf
+                // Restaurar a tecla Enter
+                restaurarEnter()
+                // Desativar o botão "adicionar"
+                btnCreate.disabled = true
+                // Ativar os botões "atualizar" e "excluir"
+                btnUpdate.disabled = false
+                btnDelete.disabled = false
             })
         })
     }

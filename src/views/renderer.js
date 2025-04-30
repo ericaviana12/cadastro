@@ -65,8 +65,8 @@ let cidade = document.getElementById('cidade')
 let uf = document.getElementById('uf')
 
 
-// ============================================================
-// == Manipulação do Enter ====================================
+// ==========================================================================
+// == Manipulação do Enter ==================================================
 
 function teclaEnter(event) {
     if (event.key === "Enter") {
@@ -84,8 +84,39 @@ function restaurarEnter() {
     frmCli.removeEventListener('keydown', teclaEnter)
 }
 
-// == Fim - Manipulação do Enter ==============================
-// ============================================================
+// == Fim - Manipulação do Enter ============================================
+// ==========================================================================
+
+
+// ==========================================================================
+// == Resetar o formulário ==================================================
+
+function resetForm() {
+    // Recarregar a página
+    location.reload()
+}
+
+// Uso da API reserForm quando salvar, editar ou excluir um cliente
+api.resetForm((args) => {
+    resetForm()
+})
+
+// == Fim - Resetar o formulário ============================================
+// ==========================================================================
+
+
+// ==========================================================================
+// == Tratamento de exceção CPF duplicado ===================================
+
+// Enviar a mensagem de reset-cpf para o main.js
+window.electron.onReceiveMessage('reset-cpf', () => {
+    cpfCliente.value = ""        // Limpar o campo CPF
+    cpfCliente.focus()           // Focar no campo CPF
+    cpfCliente.style.border = '2px solid red' // Adicionar borda vermelha ao campo CPF
+})
+
+// == Tratamento de exceção CPF duplicado ===================================
+// ==========================================================================
 
 
 //===========================================================================
@@ -125,100 +156,100 @@ frmCli.addEventListener('submit', (event) => {
 //===========================================================================
 
 
-// ==========================================================================
-// == Resetar o formulário ==================================================
-
-function resetForm() {
-    // Recarregar a página
-    location.reload()
-}
-
-// Uso da API reserForm quando salvar, editar ou excluir um cliente
-api.resetForm((args) => {
-    resetForm()
-})
-
-// == Fim - Resetar o formulário ============================================
-// ==========================================================================
-
-
-// ==========================================================================
-// == Tratamento de exceção CPF duplicado ===================================
-
-// Enviar a mensagem de reset-cpf para o main.js
-window.electron.onReceiveMessage('reset-cpf', () => {
-    cpfCliente.value = ""        // Limpar o campo CPF
-    cpfCliente.focus()           // Focar no campo CPF
-    cpfCliente.style.border = '2px solid red' // Adicionar borda vermelha ao campo CPF
-})
-
-// == Tratamento de exceção CPF duplicado ===================================
-// ==========================================================================
-
-
 //===========================================================================
 //= CRUD Read ===============================================================
 
-// Setar o nome do cliente para fazer um novo cadastro se a busca retornar que o cliente não está cadastrado.
 api.setName((args) => {
-    console.log("Teste do IPC 'set-name'")
-    // "Recortar" o nome da busca e setar (deixar) no campo nome do formulário
-    let busca = document.getElementById('buscarCliente').value
-    // Limpar o campo de busca (foco foi capturado de forma global)
-    foco.value=""
-    // Foco no campo nome
-    nomeCliente.focus()
-    // Copiar o nome do cliente para o campo nome
-    nomeCliente.value = busca
-})
+    console.log("IPC set-name acionado");
 
-function buscarNome() { // Nome da função é o nome do onclick no buscarCliente
-    console.log("Teste do botão buscar")
-    // Capturar o nome a ser pesquisado -> Passo 1
-    let cliName = document.getElementById('buscarCliente').value
-    // console.log(cliName) // Teste do passo 1
-    // Validação de campo obrigatório
-    // Se o campo de busca não foi preenchido
-    if (cliName === "") {
-        // Enviar ao main.js um pedido para alertar o usuário
-        // Precisa usar o preload.js
-        api.validateSearch()
+    const busca = document.getElementById('buscarCliente').value.trim();
+    const nomeCampo = document.getElementById('nomeCliente');
+    const cpfCampo = document.getElementById('cpfCliente');
+    const foco = document.getElementById('buscarCliente');
+
+    foco.value = ""; // limpa o campo de busca
+
+    // Se o valor digitado for um CPF (apenas números, com 11 dígitos)
+    const cpfRegex = /^\d{11}$/;
+    if (cpfRegex.test(busca.replace(/\D/g, ''))) {
+        cpfCampo.value = busca;
+        cpfCampo.focus();
     } else {
-        // Enviar o nome do cliente ao main -> Passo 2 (sair da aplicação e aparecer o nome no terminal)
-        api.searchName(cliName)
-        // Receber os dados do cliente -> Passo 5
-        api.renderClient((event, client) => {
-            // Teste de recebimento dos dados do cliente -> Passo 5
-            console.log(client)
-            // Passo 6 - renderização dos dados do cliente (preencher os inputs do form) | Não esquecer de converter os dados de string para JSON
-            const clientData = JSON.parse(client)
-            arrayClient = clientData
-            // Uso do forEach para percorrer o vetor e extrair os dados
-            arrayClient.forEach((c) => {
-                nomeCliente.value = c.nome
-                cpfCliente.value = c.cpf
-                emailCliente.value = c.email
-                telefoneCliente.value = c.telefone
-                cep.value = c.cep
-                logradouro.value = c.logradouro
-                numero.value = c.numero
-                complemento.value = c.complemento
-                bairro.value = c.bairro
-                cidade.value = c.cidade
-                uf.value = c.uf
-                // Restaurar a tecla Enter
-                restaurarEnter()
-                // Desativar o botão "adicionar"
-                btnCreate.disabled = true
-                // Ativar os botões "atualizar" e "excluir"
-                btnUpdate.disabled = false
-                btnDelete.disabled = false
-            })
-        })
+        nomeCampo.value = busca;
+        nomeCampo.focus();
     }
+});
 
+function buscarNome() {
+    
+    const cliValor = document.getElementById('buscarCliente').value.trim();
+    if (cliValor === "") {
+        api.validateSearch();
+    } else {
+        api.searchName(cliValor); // envia nome ou CPF
+        api.renderClient((event, client) => {
+            const clientData = JSON.parse(client);
+            clientData.forEach((c) => {
+                nomeCliente.value = c.nome;
+                cpfCliente.value = c.cpf;
+                emailCliente.value = c.email;
+                telefoneCliente.value = c.telefone;
+                cep.value = c.cep;
+                logradouro.value = c.logradouro;
+                numero.value = c.numero;
+                complemento.value = c.complemento;
+                bairro.value = c.bairro;
+                cidade.value = c.cidade;
+                uf.value = c.uf;
+
+                restaurarEnter();
+                btnCreate.disabled = true;
+                btnUpdate.disabled = false;
+                btnDelete.disabled = false;
+            });
+        });
+    }
 }
 
 //== Fim - CRUD Read ========================================================
 //===========================================================================
 
+
+//===========================================================================
+//= CRUD Update =============================================================
+
+function atualizarCliente() {
+    const clienteAtualizado = {
+        nome: nomeCliente.value,
+        cpf: cpfCliente.value,
+        email: emailCliente.value,
+        telefone: telefone.value,
+        cep: cep.value,
+        logradouro: logradouro.value,
+        numero: numero.value,
+        complemento: complemento.value,
+        bairro: bairro.value,
+        cidade: cidade.value,
+        uf: uf.value
+    }
+
+    api.updateClient(clienteAtualizado)
+}
+
+//= Fim - CRUD Update =======================================================
+//===========================================================================
+
+
+//===========================================================================
+//= CRUD Delete =============================================================
+
+function excluirCliente() {
+    const cpf = cpfCliente.value
+
+    if (confirm("Tem certeza que deseja excluir este cliente?")) {
+        api.deleteClient(cpf)
+    }
+}
+
+//= Fim - CRUD Delete =======================================================
+//===========================================================================

@@ -28,6 +28,10 @@
     </div>
 
     <form id="frmCli"> <!-- Início do formulário -->
+
+        <!-- Identificação da ID oculta -->
+        <input type="hidden" id="idCliente">
+
         <!-- Identificação do Usuário -->
         <fieldset class="border p-4 mt-4"> <!-- Cria um campo de identificação com borda e padding -->
 
@@ -149,10 +153,10 @@
 
         <div class="mt-4 text-center form-group"> <!-- Seção para os botões no final do formulário -->
             <button type="submit" id="btnCreate" class="btn btn-success">Adicionar</button> <!-- Botão Adicionar -->
-            <button type="submit" id="btnUpdate" class="btn btn-warning">Atualizar</button> <!-- Botão Atualizar cadastro -->
-            <button type="button" id="btnDelete" class="btn btn-danger">Excluir</button> <!-- Botão Excluir -->
+            <button type="submit" id="btnUpdate" class="btn btn-warning" onclick="atualizarCliente()" disabled>Atualizar</button> <!-- Botão Atualizar cadastro -->
+            <button type="button" id="btnDelete" class="btn btn-danger" onclick="excluirCliente()" disabled>Excluir</button> <!-- Botão Excluir -->
             <button type="reset" id="btnReset" onclick="resetForm()"></button> <!-- Botão Limpar -->
-        </div>
+        </div>        
 
     </form>
     </div>

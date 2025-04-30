@@ -242,9 +242,9 @@ async function relatorioClientes() {
         doc.line(10, y, 200, y) // (10 (início) __________ 200 (fim))
         y += 10
       }
-      doc.text(c.nome, 14, y)
-      doc.text(c.telefone, 85, y)
-      doc.text(c.email, 130, y)
+      doc.text(String(c.nome || ''), 14, y)
+      doc.text(String(c.telefone || ''), 85, y)
+      doc.text(String(c.email || ''), 130, y)
       y += 15
     })
 

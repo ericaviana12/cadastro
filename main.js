@@ -351,18 +351,18 @@ ipcMain.on('create-clientes', async (event, cadastroClientes) => {
 //= CRUD Read ===============================================================
 
 ipcMain.on('search-name', async (event, cliValor) => {
-  console.log("Valor de busca recebido:", cliValor);
+  console.log("Valor de busca recebido:", cliValor)
 
   try {
-    const valor = cliValor.trim();
-    const cpfRegex = /^\d{11}$/; // verifica se é CPF
+    const valor = cliValor.trim()
+    const cpfRegex = /^\d{11}$/ // verifica se é CPF
 
     // Se for CPF, busca pelo campo 'cpf'; senão, pelo campo 'nome'
     const query = cpfRegex.test(valor.replace(/\D/g, ''))
       ? { cpf: new RegExp(valor, 'i') }
-      : { nome: new RegExp(valor, 'i') };
+      : { nome: new RegExp(valor, 'i') }
 
-    const client = await clientesModel.find(query);
+    const client = await clientesModel.find(query)
 
     if (client.length === 0) {
       dialog.showMessageBox({
@@ -373,16 +373,16 @@ ipcMain.on('search-name', async (event, cliValor) => {
         buttons: ['Sim', 'Não']
       }).then((result) => {
         if (result.response === 0) {
-          event.reply('set-name');
+          event.reply('set-name')
         } else {
-          event.reply('reset-form');
+          event.reply('reset-form')
         }
       });
     } else {
-      event.reply('render-client', JSON.stringify(client));
+      event.reply('render-client', JSON.stringify(client))
     }
   } catch (error) {
-    console.error("Erro ao buscar cliente:", error);
+    console.error("Erro ao buscar cliente:", error)
   }
 });
 

@@ -160,52 +160,52 @@ frmCli.addEventListener('submit', (event) => {
 //= CRUD Read ===============================================================
 
 api.setName((args) => {
-    console.log("IPC set-name acionado");
+    console.log("IPC set-name acionado")
 
-    const busca = document.getElementById('buscarCliente').value.trim();
-    const nomeCampo = document.getElementById('nomeCliente');
-    const cpfCampo = document.getElementById('cpfCliente');
-    const foco = document.getElementById('buscarCliente');
+    const busca = document.getElementById('buscarCliente').value.trim()
+    const nomeCampo = document.getElementById('nomeCliente')
+    const cpfCampo = document.getElementById('cpfCliente')
+    const foco = document.getElementById('buscarCliente')
 
-    foco.value = ""; // limpa o campo de busca
+    foco.value = "" // limpa o campo de busca
 
     // Se o valor digitado for um CPF (apenas números, com 11 dígitos)
-    const cpfRegex = /^\d{11}$/;
+    const cpfRegex = /^\d{11}$/
     if (cpfRegex.test(busca.replace(/\D/g, ''))) {
-        cpfCampo.value = busca;
-        cpfCampo.focus();
+        cpfCampo.value = busca
+        cpfCampo.focus()
     } else {
-        nomeCampo.value = busca;
-        nomeCampo.focus();
+        nomeCampo.value = busca
+        nomeCampo.focus()
     }
 });
 
 function buscarNome() {
     
-    const cliValor = document.getElementById('buscarCliente').value.trim();
+    const cliValor = document.getElementById('buscarCliente').value.trim()
     if (cliValor === "") {
-        api.validateSearch();
+        api.validateSearch()
     } else {
-        api.searchName(cliValor); // envia nome ou CPF
+        api.searchName(cliValor) // envia nome ou CPF
         api.renderClient((event, client) => {
-            const clientData = JSON.parse(client);
+            const clientData = JSON.parse(client)
             clientData.forEach((c) => {
-                nomeCliente.value = c.nome;
-                cpfCliente.value = c.cpf;
-                emailCliente.value = c.email;
-                telefoneCliente.value = c.telefone;
-                cep.value = c.cep;
-                logradouro.value = c.logradouro;
-                numero.value = c.numero;
-                complemento.value = c.complemento;
-                bairro.value = c.bairro;
-                cidade.value = c.cidade;
-                uf.value = c.uf;
+                nomeCliente.value = c.nome
+                cpfCliente.value = c.cpf
+                emailCliente.value = c.email
+                telefoneCliente.value = c.telefone
+                cep.value = c.cep
+                logradouro.value = c.logradouro
+                numero.value = c.numero
+                complemento.value = c.complemento
+                bairro.value = c.bairro
+                cidade.value = c.cidade
+                uf.value = c.uf
 
                 restaurarEnter();
-                btnCreate.disabled = true;
-                btnUpdate.disabled = false;
-                btnDelete.disabled = false;
+                btnCreate.disabled = true
+                btnUpdate.disabled = false
+                btnDelete.disabled = false
             });
         });
     }

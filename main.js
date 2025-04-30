@@ -203,7 +203,7 @@ ipcMain.on('create-clientes', async (event, cadastroClientes) => {
       uf: cadastroClientes.uf
 
     })
-    //Salvar a nota no banco de dados (Passo 3:fluxo)
+    //Salvar os dados do cliente no banco de dados (Passo 3:fluxo)
     await newClientes.save()
 
 

@@ -178,38 +178,62 @@ api.setName((args) => {
         nomeCampo.value = busca
         nomeCampo.focus()
     }
-});
+})
 
 function buscarNome() {
-    
-    const cliValor = document.getElementById('buscarCliente').value.trim()
+    // Resetando os campos do formulário antes de iniciar a nova busca
+    nomeCliente.value = ''
+    cpfCliente.value = ''
+    emailCliente.value = ''
+    telefoneCliente.value = ''
+    cep.value = ''
+    logradouro.value = ''
+    numero.value = ''
+    complemento.value = ''
+    bairro.value = ''
+    cidade.value = ''
+    uf.value = ''
+
+    // Resetando os botões
+    btnCreate.disabled = false
+    btnUpdate.disabled = true
+    btnDelete.disabled = true
+
+    // Obtendo o valor de busca
+    const cliValor = document.getElementById('buscarCliente').value.trim();
     if (cliValor === "") {
         api.validateSearch()
     } else {
-        api.searchName(cliValor) // envia nome ou CPF
+        // Enviando o valor para a busca
+        api.searchName(cliValor);
+
+        // Renderizando os dados do cliente se encontrados
         api.renderClient((event, client) => {
             const clientData = JSON.parse(client)
-            clientData.forEach((c) => {
-                nomeCliente.value = c.nome
-                cpfCliente.value = c.cpf
-                emailCliente.value = c.email
-                telefoneCliente.value = c.telefone
-                cep.value = c.cep
-                logradouro.value = c.logradouro
-                numero.value = c.numero
-                complemento.value = c.complemento
-                bairro.value = c.bairro
-                cidade.value = c.cidade
-                uf.value = c.uf
+            if (clientData.length > 0) {
+                clientData.forEach((c) => {
+                    nomeCliente.value = c.nome
+                    cpfCliente.value = c.cpf
+                    emailCliente.value = c.email
+                    telefoneCliente.value = c.telefone
+                    cep.value = c.cep
+                    logradouro.value = c.logradouro
+                    numero.value = c.numero
+                    complemento.value = c.complemento
+                    bairro.value = c.bairro
+                    cidade.value = c.cidade
+                    uf.value = c.uf
 
-                restaurarEnter();
-                btnCreate.disabled = true
-                btnUpdate.disabled = false
-                btnDelete.disabled = false
-            });
-        });
+                    restaurarEnter()
+                    btnCreate.disabled = true
+                    btnUpdate.disabled = false
+                    btnDelete.disabled = false
+                })
+            }
+        })
     }
 }
+
 
 //== Fim - CRUD Read ========================================================
 //===========================================================================
@@ -223,48 +247,48 @@ const btnUpdate = document.getElementById('btnUpdate')
 
 // Função para preencher o formulário com os dados do cliente
 function preencherFormulario(cliente) {
-  nomeCliente.value = cliente.nome
-  cpfCliente.value = cliente.cpf
-  emailCliente.value = cliente.email
-  telefoneCliente.value = cliente.telefone
-  cep.value = cliente.cep
-  logradouro.value = cliente.logradouro
-  numero.value = cliente.numero
-  complemento.value = cliente.complemento
-  bairro.value = cliente.bairro
-  cidade.value = cliente.cidade
-  uf.value = cliente.uf
+    nomeCliente.value = cliente.nome
+    cpfCliente.value = cliente.cpf
+    emailCliente.value = cliente.email
+    telefoneCliente.value = cliente.telefone
+    cep.value = cliente.cep
+    logradouro.value = cliente.logradouro
+    numero.value = cliente.numero
+    complemento.value = cliente.complemento
+    bairro.value = cliente.bairro
+    cidade.value = cliente.cidade
+    uf.value = cliente.uf
 
-  // Habilitar o botão de atualizar
-  btnUpdate.disabled = false
+    // Habilitar o botão de atualizar
+    btnUpdate.disabled = false
 }
 
 // Atualizar cliente
 btnUpdate.addEventListener('click', (event) => {
-  event.preventDefault()
+    event.preventDefault()
 
-  const dadosAtualizados = {
-    nome: nomeCliente.value,
-    cpf: cpfCliente.value,
-    email: emailCliente.value,
-    telefone: telefoneCliente.value,
-    cep: cep.value,
-    logradouro: logradouro.value,
-    numero: numero.value,
-    complemento: complemento.value,
-    bairro: bairro.value,
-    cidade: cidade.value,
-    uf: uf.value
-  }
+    const dadosAtualizados = {
+        nome: nomeCliente.value,
+        cpf: cpfCliente.value,
+        email: emailCliente.value,
+        telefone: telefoneCliente.value,
+        cep: cep.value,
+        logradouro: logradouro.value,
+        numero: numero.value,
+        complemento: complemento.value,
+        bairro: bairro.value,
+        cidade: cidade.value,
+        uf: uf.value
+    }
 
-  // Enviar os dados para o main.js
-  api.updateClientes(dadosAtualizados)
+    // Enviar os dados para o main.js
+    api.updateClientes(dadosAtualizados)
 })
 
 // Função para buscar cliente (exemplo: busca por CPF)
 function buscarCliente(cpf) {
-  // Aqui você pode implementar o código para buscar um cliente no banco
-  // E depois chamar preencherFormulario(cliente) com os dados obtidos
+    // Aqui você pode implementar o código para buscar um cliente no banco
+    // E depois chamar preencherFormulario(cliente) com os dados obtidos
 }
 
 //= Fim - CRUD Update =======================================================

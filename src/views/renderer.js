@@ -218,22 +218,53 @@ function buscarNome() {
 //===========================================================================
 //= CRUD Update =============================================================
 
-function atualizarCliente() {
-    const clienteAtualizado = {
-        nome: nomeCliente.value,
-        cpf: cpfCliente.value,
-        email: emailCliente.value,
-        telefone: telefone.value,
-        cep: cep.value,
-        logradouro: logradouro.value,
-        numero: numero.value,
-        complemento: complemento.value,
-        bairro: bairro.value,
-        cidade: cidade.value,
-        uf: uf.value
-    }
+// Capturar o botão de atualizar
+const btnUpdate = document.getElementById('btnUpdate')
 
-    api.updateClient(clienteAtualizado)
+// Função para preencher o formulário com os dados do cliente
+function preencherFormulario(cliente) {
+  nomeCliente.value = cliente.nome
+  cpfCliente.value = cliente.cpf
+  emailCliente.value = cliente.email
+  telefoneCliente.value = cliente.telefone
+  cep.value = cliente.cep
+  logradouro.value = cliente.logradouro
+  numero.value = cliente.numero
+  complemento.value = cliente.complemento
+  bairro.value = cliente.bairro
+  cidade.value = cliente.cidade
+  uf.value = cliente.uf
+
+  // Habilitar o botão de atualizar
+  btnUpdate.disabled = false
+}
+
+// Atualizar cliente
+btnUpdate.addEventListener('click', (event) => {
+  event.preventDefault()
+
+  const dadosAtualizados = {
+    nome: nomeCliente.value,
+    cpf: cpfCliente.value,
+    email: emailCliente.value,
+    telefone: telefoneCliente.value,
+    cep: cep.value,
+    logradouro: logradouro.value,
+    numero: numero.value,
+    complemento: complemento.value,
+    bairro: bairro.value,
+    cidade: cidade.value,
+    uf: uf.value
+  }
+
+  // Enviar os dados para o main.js
+  api.updateClientes(dadosAtualizados)
+})
+
+// Função para buscar cliente (exemplo: busca por CPF)
+function buscarCliente(cpf) {
+  // Aqui você pode implementar o código para buscar um cliente no banco
+  // E depois chamar preencherFormulario(cliente) com os dados obtidos
 }
 
 //= Fim - CRUD Update =======================================================

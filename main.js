@@ -393,25 +393,55 @@ ipcMain.on('search-name', async (event, cliValor) => {
 //===========================================================================
 //= CRUD Update =============================================================
 
-ipcMain.on('update-client', async (event, cliente) => {
+// Atualizar cliente no banco
+ipcMain.on('update-clientes', async (event, dadosAtualizados) => {
   try {
-    const resultado = await clientesModel.updateOne({ cpf: cliente.cpf }, { $set: cliente })
-    if (resultado.modifiedCount > 0) {
+    // Procurar o cliente pelo CPF (ou algum outro identificador único)
+    const cliente = await clientesModel.findOne({ cpf: dadosAtualizados.cpf })
+    if (!cliente) {
       dialog.showMessageBox({
-        type: 'info',
-        title: 'Sucesso',
-        message: 'Cliente atualizado com sucesso!'
+        type: 'error',
+        title: 'Erro',
+        message: 'O CPF não pode ser alterado! Para corrigir esse dado, exclua o cliente e cadastre novamente.',
+        buttons: ['OK']
       })
-    } else {
-      dialog.showMessageBox({
-        type: 'warning',
-        title: 'Aviso',
-        message: 'Nenhuma modificação realizada.'
-      })
+      return
     }
-  } catch (erro) {
-    console.log(erro)
-    dialog.showErrorBox('Erro ao atualizar cliente', erro.message)
+
+    // Atualizar os dados do cliente
+    cliente.nome = dadosAtualizados.nome
+    cliente.email = dadosAtualizados.email
+    cliente.telefone = dadosAtualizados.telefone
+    cliente.cep = dadosAtualizados.cep
+    cliente.logradouro = dadosAtualizados.logradouro
+    cliente.numero = dadosAtualizados.numero
+    cliente.complemento = dadosAtualizados.complemento
+    cliente.bairro = dadosAtualizados.bairro
+    cliente.cidade = dadosAtualizados.cidade
+    cliente.uf = dadosAtualizados.uf
+
+    // Salvar no banco de dados
+    await cliente.save()
+
+    // Confirmação de sucesso
+    dialog.showMessageBox({
+      type: 'info',
+      title: 'Sucesso',
+      message: 'Cliente atualizado com sucesso!',
+      buttons: ['OK']
+    })
+
+    // Enviar uma mensagem para o renderer para resetar o formulário
+    event.reply('reset-form')
+
+  } catch (error) {
+    console.log(error)
+    dialog.showMessageBox({
+      type: 'error',
+      title: 'Erro',
+      message: 'Ocorreu um erro ao atualizar o cliente.',
+      buttons: ['OK']
+    })
   }
 })
 

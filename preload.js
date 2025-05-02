@@ -21,9 +21,8 @@ contextBridge.exposeInMainWorld('api', {
   renderClient: (client) => ipcRenderer.on('render-client', client), // Função onde o ipcRenderer vai receber os dados do cliente do main.js
   validateSearch: () => ipcRenderer.send('validate-search'), // Validação do campo obrigatório de busca
   setName: (args) => ipcRenderer.on('set-name', args), // Trocar o nome do campo de busca e colocar no campo nome, caso não tenha esse cliente no cadastro
-  updateClient: (cliente) => ipcRenderer.send('update-client', cliente),
+  updateClientes: (dadosAtualizados) => ipcRenderer.send('update-clientes', dadosAtualizados),
   deleteClient: (cpf) => ipcRenderer.send('delete-client', cpf)
-
 })
 
 // Tratamento de exceção CPF duplicado
